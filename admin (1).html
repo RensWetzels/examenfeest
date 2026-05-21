@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Examenfeest 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1a2a4a;
+    --gold: #c8a96e;
+    --sand: #f5f0e8;
+    --white: #fdfcf9;
+    --sea: #5b8fa8;
+    --text: #1a2a4a;
+    --muted: #5a6a7a;
+    --border: rgba(26,42,74,0.1);
+    --green: #2d6e48;
+    --green-bg: #eef7f0;
+    --red: #8b2c2a;
+    --red-bg: #fef2f2;
+    --amber: #7a5e1a;
+    --amber-bg: #fdf7ed;
+    --blue: #1a3d8b;
+    --blue-bg: #e8f0fe;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0ece4;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .topbar-title { font-size: 15px; font-weight: 500; color: var(--navy); }
+  .topbar-sub { font-size: 12px; color: var(--muted); font-weight: 300; margin-top: 2px; }
+
+  .refresh-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--navy); color: white;
+    border: none; border-radius: 2px;
+    padding: 8px 16px; font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500; cursor: pointer;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+  .refresh-btn:hover { opacity: 0.85; }
+  .refresh-btn svg { animation: none; }
+  .refresh-btn.loading svg { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Stats row */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1rem 1.1rem;
+  }
+  .stat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .stat-val { font-size: 26px; font-weight: 300; color: var(--navy); }
+  .stat-sub { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 2px; }
+
+  /* Filters */
+  .filters {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    background: var(--white);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); font-weight: 500; }
+  .filter-btn:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+  .search-wrap { margin-left: auto; }
+  .search-input {
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--navy);
+    outline: none;
+    width: 180px;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+  .search-input::placeholder { color: rgba(26,42,74,0.3); }
+
+  /* Table */
+  .table-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--sand); }
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(26,42,74,0.05);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(26,42,74,0.015); }
+
+  .name-cell { font-weight: 400; color: var(--navy); }
+  .time-cell { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 2px;
+    font-size: 11px; font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-yes { background: var(--green-bg); color: var(--green); }
+  .badge-no { background: var(--red-bg); color: var(--red); }
+  .badge-tikkie { background: var(--amber-bg); color: var(--amber); }
+  .badge-contant { background: var(--blue-bg); color: var(--blue); }
+  .badge-betaald { background: var(--green-bg); color: var(--green); }
+  .badge-open { background: #f5f0e8; color: #7a6a4a; }
+
+  .mark-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    background: transparent;
+    color: var(--navy);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .mark-btn:hover { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .mark-btn.paid { background: var(--green-bg); border-color: transparent; color: var(--green); cursor: default; }
+
+  .empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  /* Loading skeleton */
+  .skeleton { animation: pulse 1.5s ease-in-out infinite; background: #e8e2d8; border-radius: 2px; }
+  @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+  .error-box {
+    background: var(--red-bg);
+    border: 1px solid rgba(139,44,42,0.2);
+    border-radius: 3px;
+    padding: 1rem 1.25rem;
+    color: var(--red);
+    font-size: 13px;
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .error-box.visible { display: block; }
+
+  /* Export btn */
+  .export-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+  .export-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    th:nth-child(5), td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">⚓ Examenfeest 2026 — Admin</div>
+    <div class="topbar-sub">Overzicht aanmeldingen · 12 juni · Burgemeester van Rijnsingel 20B</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="export-btn" onclick="exportCSV()">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exporteer CSV
+    </button>
+    <button class="refresh-btn" id="refresh-btn" onclick="loadData()">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      Vernieuwen
+    </button>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-label">Totaal</div>
+    <div class="stat-val" id="stat-total">—</div>
+    <div class="stat-sub">aanmeldingen</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Komen</div>
+    <div class="stat-val" id="stat-yes" style="color:var(--green)">—</div>
+    <div class="stat-sub">gasten</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Komen niet</div>
+    <div class="stat-val" id="stat-no" style="color:var(--red)">—</div>
+    <div class="stat-sub">afgemeld</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Betaald</div>
+    <div class="stat-val" id="stat-paid" style="color:var(--green)">—</div>
+    <div class="stat-sub">via Tikkie</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Nog open</div>
+    <div class="stat-val" id="stat-open" style="color:var(--amber)">—</div>
+    <div class="stat-sub">Tikkie ausstehend</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Verwachte opbrengst</div>
+    <div class="stat-val" id="stat-revenue" style="font-size:20px">—</div>
+    <div class="stat-sub">bij volledig betaald</div>
+  </div>
+</div>
+
+<div class="error-box" id="error-box">
+  Kon geen data laden. Controleer of het Apps Script URL correct is ingesteld in admin.html.
+</div>
+
+<!-- Filters -->
+<div class="filters">
+  <button class="filter-btn active" id="f-all" onclick="setFilter('all')">Iedereen</button>
+  <button class="filter-btn" id="f-yes" onclick="setFilter('yes')">Komen</button>
+  <button class="filter-btn" id="f-tikkie" onclick="setFilter('tikkie')">Tikkie</button>
+  <button class="filter-btn" id="f-contant" onclick="setFilter('contant')">Contant</button>
+  <button class="filter-btn" id="f-open" onclick="setFilter('open')">Nog niet betaald</button>
+  <button class="filter-btn" id="f-no" onclick="setFilter('no')">Afgemeld</button>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="search" placeholder="Zoek op naam..." oninput="renderTable()">
+  </div>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Naam</th>
+        <th>Aanwezig</th>
+        <th>Betaling</th>
+        <th>Betaald?</th>
+        <th>Tijdstip</th>
+        <th>Actie</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      <tr><td colspan="7" class="empty">Data laden...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p style="font-size:11px;color:var(--muted);text-align:center;margin-top:1rem;font-weight:300;">
+  Admin · Examenfeest 2026 · Data opgeslagen in Google Sheets
+</p>
+
+<script>
+// ── CONFIG ── verander dit naar jouw Google Apps Script URL
+const SCRIPT_URL = 'JOUW_SCRIPT_URL_HIER';
+
+let allData = [];
+let paidSet = new Set(JSON.parse(localStorage.getItem('paidSet') || '[]'));
+let currentFilter = 'all';
+
+async function loadData() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('loading');
+  document.getElementById('error-box').classList.remove('visible');
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=getAll', { cache: 'no-store' });
+    const json = await res.json();
+    allData = json.data || [];
+    updateStats();
+    renderTable();
+  } catch(e) {
+    document.getElementById('error-box').classList.add('visible');
+    // Demo data for first-time setup
+    if (allData.length === 0) {
+      allData = [
+        { naam: 'Voorbeeld Gast', aanwezig: 'Ja', betaling: 'Tikkie vooraf', timestamp: new Date().toLocaleString('nl-NL') },
+        { naam: 'Andere Persoon', aanwezig: 'Nee', betaling: '—', timestamp: new Date().toLocaleString('nl-NL') },
+      ];
+      updateStats();
+      renderTable();
+    }
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+function updateStats() {
+  const komen = allData.filter(r => r.aanwezig === 'Ja');
+  const nee = allData.filter(r => r.aanwezig === 'Nee');
+  const tikkie = allData.filter(r => r.betaling === 'Tikkie vooraf');
+  const betaald = tikkie.filter(r => paidSet.has(r.naam));
+  const open = tikkie.filter(r => !paidSet.has(r.naam));
+
+  document.getElementById('stat-total').textContent = allData.length;
+  document.getElementById('stat-yes').textContent = komen.length;
+  document.getElementById('stat-no').textContent = nee.length;
+  document.getElementById('stat-paid').textContent = betaald.length;
+  document.getElementById('stat-open').textContent = open.length;
+  document.getElementById('stat-revenue').textContent = '€' + (komen.length * 15);
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('f-' + f).classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  let rows = allData;
+
+  if (currentFilter === 'yes') rows = rows.filter(r => r.aanwezig === 'Ja');
+  else if (currentFilter === 'no') rows = rows.filter(r => r.aanwezig === 'Nee');
+  else if (currentFilter === 'tikkie') rows = rows.filter(r => r.betaling === 'Tikkie vooraf');
+  else if (currentFilter === 'contant') rows = rows.filter(r => r.betaling === 'Contant op locatie');
+  else if (currentFilter === 'open') rows = rows.filter(r => r.betaling === 'Tikkie vooraf' && !paidSet.has(r.naam));
+
+  if (q) rows = rows.filter(r => r.naam.toLowerCase().includes(q));
+
+  const tbody = document.getElementById('table-body');
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty">Geen resultaten gevonden</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map((r, i) => {
+    const isPaid = paidSet.has(r.naam);
+    const isYes = r.aanwezig === 'Ja';
+    const isTikkie = r.betaling === 'Tikkie vooraf';
+
+    const attendBadge = isYes
+      ? `<span class="badge badge-yes">✓ Komt</span>`
+      : `<span class="badge badge-no">✗ Komt niet</span>`;
+
+    let payBadge = '';
+    if (r.betaling === 'Tikkie vooraf') payBadge = `<span class="badge badge-tikkie">Tikkie</span>`;
+    else if (r.betaling === 'Contant op locatie') payBadge = `<span class="badge badge-contant">Contant</span>`;
+    else payBadge = `<span style="color:var(--muted);font-size:12px">—</span>`;
+
+    let paidBadge = '';
+    let actionBtn = '';
+    if (isTikkie) {
+      paidBadge = isPaid
+        ? `<span class="badge badge-betaald">✓ Betaald</span>`
+        : `<span class="badge badge-open">Openstaand</span>`;
+      actionBtn = isPaid
+        ? `<button class="mark-btn paid" disabled>✓ Betaald</button>`
+        : `<button class="mark-btn" onclick="markPaid('${r.naam.replace(/'/g,"\\'")}')">Markeer betaald</button>`;
+    } else if (r.betaling === 'Contant op locatie') {
+      paidBadge = `<span style="color:var(--muted);font-size:11px">Op locatie</span>`;
+      actionBtn = `<span style="color:var(--muted);font-size:11px">—</span>`;
+    } else {
+      paidBadge = `<span style="color:var(--muted);font-size:11px">—</span>`;
+      actionBtn = `<span style="color:var(--muted);font-size:11px">—</span>`;
+    }
+
+    // Find real index in allData
+    const realIdx = allData.indexOf(r);
+
+    return `<tr>
+      <td style="color:var(--muted);font-size:12px">${realIdx + 1}</td>
+      <td class="name-cell">${escHtml(r.naam)}</td>
+      <td>${attendBadge}</td>
+      <td>${payBadge}</td>
+      <td>${paidBadge}</td>
+      <td class="time-cell">${escHtml(r.timestamp || '')}</td>
+      <td>${actionBtn}</td>
+    </tr>`;
+  }).join('');
+}
+
+function markPaid(naam) {
+  paidSet.add(naam);
+  localStorage.setItem('paidSet', JSON.stringify([...paidSet]));
+  updateStats();
+  renderTable();
+}
+
+function exportCSV() {
+  const headers = ['Naam','Aanwezig','Betaling','Betaald','Tijdstip'];
+  const csvRows = allData.map(r => [
+    `"${r.naam}"`,
+    r.aanwezig,
+    r.betaling,
+    (r.betaling === 'Tikkie vooraf' ? (paidSet.has(r.naam) ? 'Ja' : 'Nee') : '—'),
+    `"${r.timestamp}"`
+  ].join(','));
+  const csv = [headers.join(','), ...csvRows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'examenfeest_aanmeldingen.csv';
+  a.click();
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+loadData();
+</script>
+</body>
+</html>

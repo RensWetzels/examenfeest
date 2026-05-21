@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examenfeest — 12 Juni 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a2a4a;
+    --navy-light: #2c4270;
+    --gold: #c8a96e;
+    --gold-light: #e8d4a8;
+    --gold-pale: #f5edd8;
+    --white: #fdfcf9;
+    --text: #1a2a4a;
+    --text-muted: #5a6a7a;
+    --sand: #f5f0e8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO — poster style ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    position: relative;
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  /* Gold texture stripes background — like the poster edges */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(200,169,110,0.07) 0px,
+        rgba(200,169,110,0.03) 2px,
+        transparent 2px,
+        transparent 18px
+      );
+  }
+
+  /* The poster card itself */
+  .poster {
+    position: relative;
+    background: var(--white);
+    border: 3px solid var(--navy);
+    max-width: 480px;
+    width: 100%;
+    padding: 0;
+    box-shadow: 0 0 0 8px var(--white), 0 0 0 10px var(--gold), 6px 6px 40px rgba(26,42,74,0.15);
+    z-index: 1;
+    animation: fadeUp 0.8s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .poster-inner {
+    padding: 2.5rem 2.25rem 2rem;
+  }
+
+  /* Top gold bar */
+  .poster-topbar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--gold-pale), var(--gold), var(--gold-light), var(--gold));
+    margin-bottom: 2rem;
+  }
+
+  /* Title block */
+  .poster-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 12vw, 5.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.75rem;
+  }
+
+  .poster-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Date + illustration row */
+  .poster-mid {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    gap: 1rem;
+  }
+
+  .poster-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.05;
+  }
+
+  /* Martini glasses SVG illustration */
+  .glasses-wrap {
+    flex-shrink: 0;
+    width: 130px;
+    opacity: 0.9;
+  }
+
+  /* Info row */
+  .poster-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem 1rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid rgba(26,42,74,0.15);
+    border-bottom: 1px solid rgba(26,42,74,0.15);
+    margin-bottom: 1.5rem;
+  }
+
+  .info-block { }
+  .info-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .info-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: var(--navy);
+    line-height: 1.15;
+  }
+  .info-sub {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  /* Location row */
+  .poster-location {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 0.85rem;
+    background: rgba(200,169,110,0.08);
+    border: 1px solid rgba(200,169,110,0.25);
+    border-radius: 2px;
+    margin-bottom: 1.75rem;
+  }
+  .location-pin {
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .location-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+
+  /* CTA button */
+  .poster-cta {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.25s;
+  }
+  .poster-cta:hover { background: var(--navy-light); }
+
+  /* Bottom gold bar */
+  .poster-bottombar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold-pale), var(--gold));
+  }
+
+  /* Grad cap decoration */
+  .gradcap {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.75rem;
+    opacity: 0.7;
+  }
+
+  /* ── FORM SECTION ── */
+  .form-section {
+    background: var(--sand);
+    padding: 5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 300;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 380px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .form-card {
+    background: var(--white);
+    border: 1px solid rgba(26,42,74,0.1);
+    border-radius: 2px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 2px 40px rgba(26,42,74,0.06);
+  }
+
+  .field { margin-bottom: 1.75rem; }
+  .field-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+  }
+  .field input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(26,42,74,0.15);
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input[type="text"]:focus { border-color: var(--gold); }
+  .field input[type="text"]::placeholder { color: rgba(26,42,74,0.3); }
+
+  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice-btn {
+    border: 1.5px solid rgba(26,42,74,0.12);
+    border-radius: 2px;
+    padding: 1.25rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+    text-align: center;
+    user-select: none;
+  }
+  .choice-btn:hover { border-color: var(--navy); }
+  .choice-btn.selected-yes { border-color: var(--gold); background: rgba(200,169,110,0.07); }
+  .choice-btn.selected-no { border-color: #8b2c2a; background: rgba(139,44,42,0.04); }
+  .choice-icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+  .choice-title { font-size: 14px; font-weight: 500; color: var(--navy); margin-bottom: 2px; }
+  .choice-sub { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+  .payment-step {
+    display: none;
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(26,42,74,0.08);
+    animation: fadeIn 0.3s ease;
+  }
+  .payment-step.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .pay-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    border: 1.5px solid rgba(26,42,74,0.12);
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+    background: var(--white);
+  }
+  .pay-option:hover { border-color: var(--navy); }
+  .pay-option.selected { border-color: var(--gold); background: rgba(200,169,110,0.06); }
+  .pay-option input[type="radio"] { margin-top: 3px; accent-color: var(--gold); }
+  .pay-option-label { font-size: 14px; font-weight: 500; color: var(--navy); margin-bottom: 2px; }
+  .pay-option-sub { font-size: 12px; font-weight: 300; color: var(--text-muted); }
+
+  .tikkie-box {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    background: rgba(200,169,110,0.08);
+    border: 1px solid rgba(200,169,110,0.3);
+    border-radius: 2px;
+    animation: fadeIn 0.3s ease;
+  }
+  .tikkie-box.visible { display: block; }
+  .tikkie-box p { font-size: 13px; color: var(--navy); line-height: 1.6; font-weight: 300; }
+
+  .decline-msg {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background: rgba(26,42,74,0.03);
+    border-radius: 2px;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.6;
+    font-weight: 300;
+    animation: fadeIn 0.3s ease;
+  }
+  .decline-msg.visible { display: block; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 2rem;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--navy-light); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 1rem;
+    animation: fadeIn 0.5s ease;
+  }
+  .success-screen.visible { display: block; }
+  .success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+  }
+  .success-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 300; max-width: 340px; margin: 0 auto 1.5rem; }
+  .success-tikkie-box {
+    background: rgba(200,169,110,0.1);
+    border: 1px solid rgba(200,169,110,0.35);
+    border-radius: 2px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+  }
+  .success-tikkie-box p { font-size: 13px; color: var(--navy); line-height: 1.6; }
+  .success-tikkie-box a {
+    display: inline-block;
+    margin-top: 0.75rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 2px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer {
+    background: var(--navy);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  footer p { font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 300; letter-spacing: 0.05em; }
+
+  @media (max-width: 480px) {
+    .form-card { padding: 1.75rem 1.25rem; }
+    .poster-inner { padding: 2rem 1.5rem 1.75rem; }
+    .glasses-wrap { width: 100px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO — POSTER ══ -->
+<section class="hero" id="top">
+  <div class="poster">
+    <div class="poster-topbar"></div>
+    <div class="poster-inner">
+
+      <!-- Grad cap -->
+      <div class="gradcap">
+        <svg width="52" height="42" viewBox="0 0 52 42" fill="none">
+          <polygon points="26,4 50,16 26,28 2,16" fill="#1a2a4a" opacity="0.85"/>
+          <rect x="38" y="16" width="3" height="14" fill="#1a2a4a" opacity="0.7" rx="1"/>
+          <path d="M41 30 Q44 32 41 35 Q38 32 41 30Z" fill="#c8a96e"/>
+          <path d="M10 16 L10 28 Q26 36 42 28 L42 16" fill="#2c4270" opacity="0.5"/>
+        </svg>
+      </div>
+
+      <!-- Title -->
+      <h1 class="poster-title">Examen<br>feest</h1>
+      <p class="poster-names">Dia, Beau, Rens, Emil, Donné</p>
+
+      <!-- Date + glasses -->
+      <div class="poster-mid">
+        <div class="poster-date">12 juni<br>2026</div>
+
+        <!-- Martini glasses illustration -->
+        <div class="glasses-wrap">
+          <svg viewBox="0 0 130 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left glass -->
+            <g transform="rotate(-18, 38, 55)">
+              <polygon points="38,15 58,55 18,55" fill="none" stroke="#1a2a4a" stroke-width="1.8" stroke-linejoin="round"/>
+              <line x1="38" y1="55" x2="38" y2="85" stroke="#1a2a4a" stroke-width="1.8"/>
+              <line x1="28" y1="85" x2="48" y2="85" stroke="#1a2a4a" stroke-width="1.8"/>
+              <!-- liquid fill -->
+              <polygon points="38,25 53,52 23,52" fill="rgba(26,42,74,0.08)"/>
+            </g>
+            <!-- Right glass -->
+            <g transform="rotate(16, 90, 55)">
+              <polygon points="90,12 112,55 68,55" fill="none" stroke="#1a2a4a" stroke-width="1.8" stroke-linejoin="round"/>
+              <line x1="90" y1="55" x2="90" y2="85" stroke="#1a2a4a" stroke-width="1.8"/>
+              <line x1="80" y1="85" x2="100" y2="85" stroke="#1a2a4a" stroke-width="1.8"/>
+              <polygon points="90,22 107,52 73,52" fill="rgba(26,42,74,0.08)"/>
+            </g>
+            <!-- Left hand suggestion -->
+            <path d="M5,90 Q20,75 32,68" stroke="#1a2a4a" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+            <!-- Right hand suggestion -->
+            <path d="M125,88 Q110,73 98,65" stroke="#1a2a4a" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Info grid -->
+      <div class="poster-info">
+        <div class="info-block">
+          <div class="info-label">Aanvang</div>
+          <div class="info-value">20:00</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Dresscode</div>
+          <div class="info-value">Zomer chique</div>
+        </div>
+        <div class="info-block" style="margin-top:0.75rem">
+          <div class="info-label">Entree</div>
+          <div class="info-value">€15</div>
+          <div class="info-sub">vooraf of op locatie</div>
+        </div>
+        <div class="info-block" style="margin-top:0.75rem">
+          <div class="info-label">Datum</div>
+          <div class="info-value">Vrijdag</div>
+          <div class="info-sub">12 juni 2026</div>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="poster-location">
+        <div class="location-pin">
+          <svg width="18" height="22" viewBox="0 0 24 28" fill="none">
+            <path d="M12 2C7.58 2 4 5.58 4 10c0 6 8 16 8 16s8-10 8-16c0-4.42-3.58-8-8-8z" fill="#c8a96e"/>
+            <circle cx="12" cy="10" r="3" fill="white"/>
+          </svg>
+        </div>
+        <div class="location-text">Burgemeester van Rijnsingel 20B</div>
+      </div>
+
+      <!-- CTA -->
+      <a href="#rsvp" class="poster-cta">Aanmelden ↓</a>
+    </div>
+    <div class="poster-bottombar"></div>
+  </div>
+</section>
+
+<!-- ══ FORM ══ -->
+<section class="form-section" id="rsvp">
+  <p class="section-label">Aanmelding</p>
+  <h2 class="section-title">Ben jij erbij?</h2>
+  <p class="section-sub">Laat het ons weten voor 5 juni zodat we alles goed kunnen regelen.</p>
+
+  <div class="form-card">
+    <div id="form-content">
+      <div class="field">
+        <label class="field-label" for="input-name">Jouw naam</label>
+        <input type="text" id="input-name" placeholder="Voornaam achternaam" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label class="field-label">Kom je?</label>
+        <div class="choice-grid">
+          <div class="choice-btn" id="btn-yes" onclick="selectAttend('yes')">
+            <span class="choice-icon">🥂</span>
+            <div class="choice-title">Ja, ik kom!</div>
+            <div class="choice-sub">€15 entree</div>
+          </div>
+          <div class="choice-btn" id="btn-no" onclick="selectAttend('no')">
+            <span class="choice-icon">😔</span>
+            <div class="choice-title">Helaas niet</div>
+            <div class="choice-sub">Geen probleem</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-step" id="payment-step">
+        <label class="field-label">Hoe wil je betalen?</label>
+        <label class="pay-option" id="opt-tikkie" onclick="selectPay('tikkie')">
+          <input type="radio" name="payment" value="tikkie" id="radio-tikkie">
+          <div>
+            <div class="pay-option-label">Vooraf via Tikkie</div>
+            <div class="pay-option-sub">Je ontvangt na aanmelding een betaallink</div>
+          </div>
+        </label>
+        <label class="pay-option" id="opt-contant" onclick="selectPay('contant')">
+          <input type="radio" name="payment" value="contant" id="radio-contant">
+          <div>
+            <div class="pay-option-label">Op locatie contant</div>
+            <div class="pay-option-sub">Zorg voor gepast geld (€15)</div>
+          </div>
+        </label>
+        <div class="tikkie-box" id="tikkie-preview">
+          <p>Na het insturen van je aanmelding zie je onze Tikkie-betaallink. Stuur €15 en je plek is gegarandeerd!</p>
+        </div>
+      </div>
+
+      <div class="decline-msg" id="decline-msg">
+        Jammer dat je er niet bij kunt zijn — toch bedankt voor het doorgeven!
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="handleSubmit()" disabled>
+        Aanmelding versturen
+      </button>
+    </div>
+
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon" id="success-icon">🎉</div>
+      <h3 class="success-title" id="success-title">Tot 12 juni!</h3>
+      <p class="success-body" id="success-body"></p>
+      <div class="success-tikkie-box" id="success-tikkie-box" style="display:none">
+        <p>Maak €15 over via Tikkie om je plek te bevestigen:</p>
+        <a href="https://tikkie.me/pay/joq4iieaimcg9vvnas3l" id="tikkie-final-link" target="_blank">Betaal €15 via Tikkie →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Examenfeest 2026 · Dia · Beau · Rens · Emil · Donné</p>
+</footer>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySRoPans7NFOEKGCmptZn4UT_eL-Kzh-0g0A94lEm-RQjw4G0-aD0dFSZbNRdpeE6m-g/exec';
+const TIKKIE_URL = 'TIKKIE_LINK_HIER';
+
+document.getElementById('tikkie-final-link').href = TIKKIE_URL;
+
+let attend = null, payment = null;
+
+function selectAttend(val) {
+  attend = val; payment = null;
+  document.getElementById('btn-yes').classList.toggle('selected-yes', val === 'yes');
+  document.getElementById('btn-no').classList.toggle('selected-no', val === 'no');
+  document.getElementById('payment-step').classList.toggle('visible', val === 'yes');
+  document.getElementById('decline-msg').classList.toggle('visible', val === 'no');
+  document.getElementById('tikkie-preview').classList.remove('visible');
+  document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('input[name="payment"]').forEach(r => r.checked = false);
+  updateSubmit();
+}
+
+function selectPay(val) {
+  payment = val;
+  document.getElementById('radio-' + val).checked = true;
+  document.getElementById('opt-tikkie').classList.toggle('selected', val === 'tikkie');
+  document.getElementById('opt-contant').classList.toggle('selected', val === 'contant');
+  document.getElementById('tikkie-preview').classList.toggle('visible', val === 'tikkie');
+  updateSubmit();
+}
+
+function updateSubmit() {
+  const name = document.getElementById('input-name').value.trim();
+  document.getElementById('submit-btn').disabled = !(name.length > 1 && attend !== null && (attend === 'no' || payment !== null));
+}
+
+document.getElementById('input-name').addEventListener('input', updateSubmit);
+
+async function handleSubmit() {
+  const name = document.getElementById('input-name').value.trim();
+  const btn = document.getElementById('submit-btn');
+  btn.innerHTML = '<span class="spinner"></span>Even geduld...';
+  btn.disabled = true;
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        naam: name,
+        aanwezig: attend === 'yes' ? 'Ja' : 'Nee',
+        betaling: attend === 'yes' ? (payment === 'tikkie' ? 'Tikkie vooraf' : 'Contant op locatie') : '—',
+        timestamp: new Date().toLocaleString('nl-NL')
+      })
+    });
+  } catch(e) {}
+
+  document.getElementById('form-content').style.display = 'none';
+  const screen = document.getElementById('success-screen');
+  screen.classList.add('visible');
+
+  if (attend === 'yes') {
+    document.getElementById('success-icon').textContent = '🥂';
+    document.getElementById('success-title').textContent = `Tot 12 juni, ${name.split(' ')[0]}!`;
+    if (payment === 'tikkie') {
+      document.getElementById('success-body').textContent = 'Je aanmelding is ontvangen! Maak hieronder €15 over via Tikkie om je plek te bevestigen.';
+      document.getElementById('success-tikkie-box').style.display = 'block';
+      document.getElementById('tikkie-final-link').href = TIKKIE_URL;
+    } else {
+      document.getElementById('success-body').textContent = 'Je aanmelding is ontvangen! Zorg voor €15 contant op 12 juni. We zien je snel!';
+    }
+  } else {
+    document.getElementById('success-icon').textContent = '👋';
+    document.getElementById('success-title').textContent = 'Jammer!';
+    document.getElementById('success-body').textContent = `We zullen je missen, ${name.split(' ')[0]}. Bedankt voor het doorgeven!`;
+  }
+}
+</script>
+</body>
+</html>
